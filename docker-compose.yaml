@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  postgresdb:
+    image: postgres:latest
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: falcon
+      POSTGRES_PASSWORD: cloudstation
+      POSTGRES_DB: mydb
+    ports:
+      - "5433:5432"
+    networks:
+      - backstage-network
+
+  backstage:
+    image: glgelopfalcon/backstage
+    container_name: backstage
+    environment:
+      POSTGRES_HOST: postgresdb
+      POSTGRES_USER: falcon
+      POSTGRES_PASSWORD: cloudstation
+      POSTGRES_DB: mydb
+      POSTGRES_PORT: 5432
+    ports:
+      - "7007:7007"
+    depends_on:
+      - postgresdb
+    networks:
+      - backstage-network
+
+networks:
+  backstage-network:
+    driver: bridge
